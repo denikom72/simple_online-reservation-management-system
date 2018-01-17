@@ -1,0 +1,61 @@
+<head>
+
+<base href="http://localhost/ONLINERESERVATION/layoutIt2/src/" target="_blank">
+</head>
+
+		<table id="showinformations" class="table table-hover table-condensed table-bordered">
+			
+			<thead>
+				<th>foo</th>
+				<th>foo</th>
+				<th>foo</th>
+				<th>foo</th>
+				<th>foo</th>
+				<th>foo</th>
+
+
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	
+<script src="js/jquery.min.js"></script>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+
+<script type="text/javascript" src="jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+
+			$("#showinformations").dataTable({
+					"aaSorting": [[ 0, "asc" ]],
+        "aoColumns": [
+           {
+                "sWidth": "20%"
+                // "sType": "formatted-num" 
+            },{
+                "sWidth": "20%"
+                // "sType": "formatted-num" 
+            },{
+                "sWidth": "20%"
+                // "sType": "formatted-num" 
+            },{
+                "sWidth": "20%"
+                // "sType": "formatted-num" 
+            
+            },{
+                "sWidth": "10%"
+                // "sType": "formatted-num" 
+            
+            },{
+                "sWidth": "10%"
+                // "sType": "formatted-num" 
+            }
+        ],
+					"aaData" : [
+ 						[ "a", "b", "c", "d", "e", "f" ],
+				        	[ "g", "h", "i", "j", "k", "l" ],
+					        [ "m", "n", "o", "p", "q", "r" ]
+					]
+			});
+</script>

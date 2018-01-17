@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Bootstrap 3, from LayoutIt!</title>
+	
+	<meta name="description" content="Source code generated using layoutit.com">
+	<meta name="author" content="LayoutIt!">
+	
+	<script src="js/angular.min.js"></script>
+	
+
+	<script src="js/jquery.min.js"></script>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+
+	<script type="text/javascript" src="jquery.timepicker.js"></script>
+	<link rel="stylesheet" type="text/css" href="jquery.timepicker.css">
+	
+	<script type="text/javascript" src="bootstrap-datepicker.js"></script>
+	<link rel="stylesheet" type="text/css" href="bootstrap-datepicker.css">
+	
+	<script type="text/javascript" src="site.js"></script>
+	<link rel="stylesheet" type="text/css" href="site.css">
+  </head>
+  <body ng-app="myApp">
+
+    <div class="container-fluid"  ng-controller="myCtrl">
+	<div class="row">
+		<div class="col-md-12">
+			
+			<div class="page-header">
+				<h1>
+					Timereservation<small>-management-system  of different objects like tables, rooms, ...</small>
+				</h1>
+			</div>
+			<div class="form-horizontal" role="form" id="datepairExample">
+			
+					<div style="float:left; margin-right: 5px;">
+						<input placeholder="start date" style="float:left;" type="email" class="form-control date start" id="startDate">
+					
+				
+			
+					 
+				
+						<input type="text" placeholder="start time" class="form-control time start ui-timepicker-input" style="float:left;margin-right: 5px;" id="startTime" autocomplete="off">  
+					</div> 
+						 
+				
+					<div style="float:left; margin-right: 5px;">  
+						<input placeholder="end date" style="float:left;" type="email" class="form-control date end" id="endDate">
+					
+						<input type="text" placeholder="end time" class="form-control time end ui-timepicker-input" id="endTime" style="float:loaft" autocomplete="off"> 
+					</div> 
+
+					<div style="float:left; margin-right: 5px;">  
+						<input type="text" placeholder="number of persons" class="form-control" style="float:loaft" id="persQuantity"  autocomplete="off"> 
+					</div>  
+
+ 
+				<div class="form-group">
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-0 col-sm-10">
+						 
+						<button id="checkreservations" class="btn btn-default" style="margin-right: 5px;">
+							Check reservations	
+						</button>
+						
+						<button id="makereservations" class="btn btn-default">
+							Make reservation	
+						</button>
+
+
+					</div>
+				</div>
+			</div>
+			<table class="table table-hover table-condensed table-bordered">
+				<thead>
+					<tr>
+						<th>
+							#
+						</th>
+						<th>
+							At: 2017-08-09 12:44 <> Until: 2017-08-09 17:44	
+						</th>
+						<th colspan="2">
+							Allowed timearea
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							Capacity
+						</td>
+
+
+						<td>
+							Number of capacities
+						</td>
+
+
+						<td>
+							At:	
+						</td>
+
+						<td>
+							Until:	
+						</td>
+
+					</tr>
+					<tr ng-repeat="r in rows"  class="{{myCl[$index % 3]}}">
+						<td>
+							{{r[0]}}	
+						</td>
+						<td>
+							
+							{{r[1]}}	
+						</td>
+						<td>
+							{{r[2]}}	
+							
+						</td>
+						<td>
+							{{r[2]}}	
+							
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		
+		<div class="col-md-9">
+						 
+			<h3>
+				objects, capacities, timeareas
+			</h3>
+			<button id="showreservations" class="btn btn-default" style="margin-right: 5px;">
+				show reservations	
+			</button>
+
+
+			<button id="showcapacities" class="btn btn-default" style="margin-right: 5px;">
+				show capacities	
+			</button>
+
+			<br><br>
+			<table class="table table-hover table-condensed table-bordered">
+				<thead>
+					<tr>
+						<th>
+							#
+						</th>
+						<th>
+							Capacity	
+						</th>
+						<th>
+							Number of capacities 	
+						</th>
+						<th>
+							Timearea
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="r2 in rows2"  class="{{ myCl[$index % 3] }}">
+					
+						<td>
+							Placeholder
+						</td>
+
+						<td>
+							{{r2[0]}}	
+						</td>
+						<td>
+							
+							{{r2[1]}}	
+						</td>
+						<td>
+							{{r2[2]}}	
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+
+			<table style="width: 100%;" class="table-hover">
+				
+					<tr ng-repeat="r2 in rows2" style="border-bottom: 1px solid olivedrab; padding: 4px;"  class="{{ myCl[$index % 3] }}">
+					
+						<td>
+							Placeholder
+						</td>
+						<script>
+							var td = "<td style='background-color: burlywood; opacity: 0.5;'>&#160;</td>";
+							for ( var i = 0; i < 100; i++ ) {
+								document.write(td);
+							}
+						</script>
+					</tr>
+				
+			</table>
+
+
+		</div>
+	</div>
+	
+</div>
+
+
+	<script src="datepair.js"></script>
+	<script src="jquery.datepair.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/scripts.js"></script>
+	<script>
+		$('#datepairExample .time').timepicker({
+	        	'showDuration': true,
+	        	'timeFormat': 'g:ia'
+		});
+
+		$('#datepairExample .date').datepicker({
+	        	'format': 'm/d/yyyy',
+	        	'autoclose': true
+		});
+
+		$('#datepairExample').datepair();
+
+		//__________BUTTON_AJAX_CALLER_DEFINITION
+
+$(document).ready(function(){
+
+	function sendData( controller, ext, action ){
+		var inputs = document.getElementsByTagName("input");
+		var options = document.getElementsByTagName("option");
+
+		var urlRequest = "";
+
+		[].forEach.call(inputs, function(v,i){
+			var attrId = v.getAttribute("id");
+			//alert(attrId);
+			var id = document.getElementById(attrId);
+			var valOfId = id.value;
+			// attrId is id of tag-node and should have the name of params which are used in the back end pm-modules	
+			urlRequest = urlRequest + attrId + "=" + valOfId + "&";
+		});
+
+		[].forEach.call( options, function(v,i){ 
+			if(v.selected){
+				urlRequest = urlRequest + v.getAttribute("name") + "=" + v.value + "&"; 
+			}
+		});
+
+		urlRequest = controller + "." + ext + "?" + "action=" + action + "&" + urlRequest;
+		$.ajax({
+			type: "GET",
+			url: urlRequest,
+			success: function(msg){
+				alert( "Data Saved: " + msg );
+				document.location.reload();
+							
+			},
+				error: function(error){
+				alert("error: " + error);
+			}
+		});
+	}
+
+	//sendData( "div" );
+
+
+		function sendTrigger(clickNode, controler, extension){
+			$(clickNode).click(function(e){
+				e.preventDefault();
+				var pmName = $(this).attr('id');
+				alert("click success: " + pmName);
+				sendData( controler , extension, pmName );
+			});
+		}
+	
+		sendTrigger(".btn", "http://localhost/onlineReservation/controler", "cgi");
+});
+
+
+		//____________ANGULAR_MAIN_ANGULAR_______________//
+
+		var app = angular.module('myApp', []);
+
+		app.controller('myCtrl', function($scope){
+		
+		$scope.myCl = ["success", "warning","danger"];
+		$scope.rows = [
+				// capacity of object, number of object, timearea  
+				[ "2", "6", "2017-09-09 9:33", "success"],
+				[ "3", "3", "2017-09-09 9:33", "warning"],
+				[ "4", "7", "2017-09-09 9:33", "danger"]
+			];
+	
+		$scope.rows2 = [
+				// capacity of object, number of object, timearea  
+				[ "2", "6", "2017-09-09 9:33"],
+				[ "3", "3", "2017-09-09 9:33"],
+				[ "4", "7", "2017-09-09 9:33"]
+			];	
+		});
+
+
+	</script>
+</body></html>
+
+
