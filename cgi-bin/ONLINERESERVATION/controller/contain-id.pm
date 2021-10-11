@@ -4,16 +4,6 @@ package showreservations;
 use Data::Dumper;
 use modules;
  
-####DB-LOGIN-DATA
-#$modules::DB_DATA::table = "es";
-
-####ACCESSORS
-our $accIns_el = sub {
-                # make plausibility check with sprintf ...
-                my ( $ref, $sql ) = ( shift, shift );
-                $ins_post = $sql if $sql ne "";
-                $ins_post;
-};
 
 ####CONSTRUCTOR### 
 sub new { 
@@ -23,7 +13,6 @@ sub new {
         $self;
 }
 
-####DB-METHODS###
 
 sub printres {
 	my $self = shift;

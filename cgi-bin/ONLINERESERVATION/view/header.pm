@@ -11,7 +11,7 @@ print <<'HTML';
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Insert title here</title>
-<base href="http://localhost/ONLINERESERVATION/layoutIt2/src/" target="_blank">
+<base href="http://172.17.0.2/ONLINERESERVATION/layoutIt2/src/" target="_blank">
  
 <script src="js/angular.min.js"></script>
 	

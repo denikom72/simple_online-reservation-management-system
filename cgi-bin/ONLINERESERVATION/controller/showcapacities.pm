@@ -4,17 +4,6 @@ package showcapacities;
 use Data::Dumper;
 use modules;
  
-####DB-LOGIN-DATA
-#$modules::DB_DATA::table = "es";
-
-####ACCESSORS
-our $accIns_el = sub {
-                # make plausibility check with sprintf ...
-                my ( $ref, $sql ) = ( shift, shift );
-                $ins_post = $sql if $sql ne "";
-                $ins_post;
-};
-
 ####CONSTRUCTOR### 
 sub new { 
 	my $type = shift;
@@ -23,16 +12,11 @@ sub new {
         $self;
 }
 
-####DB-METHODS###
-
 sub printres {
 	my $self = shift;
 	my $args = shift;
 	print "Content-type: text/json\n\n";
 	$res_set = $DB_DATA::inst->sel_query( $DB_DATA::dbh, $DB_DATA::all_cont, [] );
-	#TEST
-	#print $res_set->[3]->[3];	
-	#print [ split " ", $res_set->[3]->[3] ]->[1];
 	
 	my $ind = 0;
 	map {

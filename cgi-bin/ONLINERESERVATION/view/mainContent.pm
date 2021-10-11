@@ -5,7 +5,7 @@ print <<'HTML';
 			
 			<div class="page-header">
 				<h1>
-					Timereservation<small>-management-system  of different objects like tables, rooms, ...</small>
+					<small>Timereservation-management-system for different objects like tables, rooms, ...</small>
 				</h1>
 			</div>
 			<div class="form-horizontal" role="form" id="datepairExample">
@@ -73,7 +73,7 @@ print <<'HTML';
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-if="rows2[0].indexOf('Reservation') == -1 && mkrow == 'true'" ng-repeat="r2 in rows2 track by ( r2.id + $index )"  class="{{ myCl[$index % 3] }}">
+					<tr ng-if="rows2[0].indexOf('Reservation') == -1 && mkrow == 'true'" ng-repeat="r2 in rows2 track by ( r2.id + $index )"  class="{{ myCl[$index % 2] }}">
 					
 						<td ng-repeat="td in r2 track by ( m.id + $index )" >
 							{{td}}	
@@ -100,10 +100,10 @@ print <<'HTML';
 				Create new capacity	
 			</button>
 
-
 			<button alertMessage="yes" id="deletecapacity" class="btn btn-default">
 				Delete capacity	
 			</button>
+
 			<br><br>
 			
 			<h3>{{head2}}</h3>

@@ -274,16 +274,16 @@ $(document).ready(function(){
 	//sendData( "div" );
 
 
-		function sendTrigger(clickNode, controler, extension){
+		function sendTrigger(clickNode, controller, extension){
 			$(clickNode).click(function(e){
 				e.preventDefault();
 				var pmName = $(this).attr('id');
 				alert("click success: " + pmName);
-				sendData( controler , extension, pmName );
+				sendData( controller , extension, pmName );
 			});
 		}
 	
-		sendTrigger(".btn", "http://localhost/onlineReservation/controler", "cgi");
+		sendTrigger(".btn", "http://172.17.0.2/onlineReservation/controller", "cgi");
 });
 
 

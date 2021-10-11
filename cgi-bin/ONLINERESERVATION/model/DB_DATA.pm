@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 
-use lib "/var/www/cgi-bin/ONLINERESERVATION/";
 use db_manager;
 
 use Exporter;
@@ -20,6 +19,8 @@ our $table2 = "containers";
 
 our $inst = db_manager->new( $db, $db_user, $db_pw );	
 our $dbh = $inst->con( $inst->{"db_name"}, $inst->{"user"}, $inst->{"pw"} );
+
+
 
 ###SQL-QUERIES###
 
@@ -42,41 +43,35 @@ SELECT c.cont_id, c.capacity, r.pers_quant, c.start, c.the_end FROM containers A
 );
 ';
 
-#SELECT c.cont_id AS ccontid, c.capacity, c.start, c.the_end 
-#FROM containers AS c 
-#LEFT JOIN reservations AS r
-#ON c.cont_id = r.cont_id
-#HAVING  ccontid NOT IN
-#(
-#     SELECT t1.cont_id
-#     FROM reservations AS t1
-#     INNER JOIN containers AS t2
-#     ON t1.cont_id = t2.cont_id
-#        
-#)    
-
 our $checkreserv =' 
-SELECT c.cont_id AS ccontid, c.capacity AS ccap, c.start, c.the_end 
-FROM containers AS c 
-LEFT JOIN reservations AS r 
-ON c.cont_id = r.cont_id  
-GROUP BY ccontid
+SELECT 
+	c.cont_id AS ccontid, c.capacity AS ccap, c.start, c.the_end 
+FROM 
+	containers AS c 
+LEFT JOIN 
+	reservations AS r 
+ON 
+	c.cont_id = r.cont_id  
+GROUP BY 
+	ccontid
 HAVING ccontid NOT IN 
 (
-	SELECT res.cont_id 
-	FROM ' .$table1. ' AS res 
+	SELECT 
+		res.cont_id 
+	FROM 
+		' .$table1. ' AS res 
 	WHERE
-	UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(res.reserv_at) 
+		UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(res.reserv_at) 
 	AND 
-	UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(res.reserv_until)
+		UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(res.reserv_until)
 	OR
-	UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(res.reserv_at) 
+		UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(res.reserv_at) 
 	AND
-	UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(res.reserv_until)
+		UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(res.reserv_until)
 	OR
-	UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(res.reserv_at) 
+		UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(res.reserv_at) 
 	AND
-	UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(res.reserv_at)
+		UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(res.reserv_at)
 ) AND  ? <= ccap;';
 
 our $checkreserv2 ='
@@ -229,6 +224,96 @@ WHERE NOT EXISTS (
 
 ";
 
+
+our $makereserv_fixed = " 
+	
+INSERT INTO 
+	reservations ( `cont_id`, `pers_quant`,`reserv_at`, `reserv_until`)
+SELECT 
+	? AS cid, ? AS per,  ?,  ?  FROM containers AS c
+WHERE (
+        ? NOT IN (
+        
+	SELECT 
+	 	r.cont_id FROM reservations AS r 
+	WHERE
+                UNIX_TIMESTAMP(?) > UNIX_TIMESTAMP(r.reserv_at)
+        AND
+                UNIX_TIMESTAMP(?) < UNIX_TIMESTAMP(r.reserv_until)
+        OR
+                 UNIX_TIMESTAMP(?) > UNIX_TIMESTAMP(r.reserv_at)
+        AND 
+		UNIX_TIMESTAMP(?) < UNIX_TIMESTAMP(r.reserv_until)
+        OR
+                 UNIX_TIMESTAMP(?) < UNIX_TIMESTAMP(r.reserv_at)
+        AND 
+		UNIX_TIMESTAMP(?) > UNIX_TIMESTAMP(r.reserv_at)
+
+) 
+AND 
+	UNIX_TIMESTAMP(?) < UNIX_TIMESTAMP(?) 
+AND 
+	UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(NOW()) 
+AND 
+	? <= ( SELECT capacity AS cap FROM containers AS con WHERE con.cont_id = ? )
+)
+
+
+OR
+
+(
+         0 IN (
+         
+	 SELECT COUNT(*) FROM reservations AS r WHERE
+                 UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(r.reserv_at)
+         AND
+                 UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(r.reserv_until)
+         OR
+                 UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(r.reserv_at)
+         AND 
+	 	UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(r.reserv_until)
+         OR
+                 UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(r.reserv_at)
+         AND 
+	 	UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(r.reserv_at)
+
+) 
+AND 
+	UNIX_TIMESTAMP(?) < UNIX_TIMESTAMP(?) 
+AND 
+	UNIX_TIMESTAMP(?) > UNIX_TIMESTAMP(NOW()) 
+AND 
+	? <= ( SELECT capacity AS cap FROM containers AS con WHERE con.cont_id = ? )
+
+
+AND
+
+	#START-TIME AND CONT_ID,  check if time it's into the allowed timearea, 2019 ... is just a placeholder, date it's not importent just time for this check 
+	UNIX_TIMESTAMP( CONCAT( '2019-05-05', ' ', SUBSTR( ?, 11, 19 ) ) ) 
+			
+					>= 
+
+	UNIX_TIMESTAMP( CONCAT( '2019-05-05', ' ', SUBSTR( ( SELECT start FROM containers WHERE cont_id = ? ), 11, 19  ) ) )
+
+	AND
+	
+	#END-TIME AND CONT_ID,  check if time it's into the allowed timearea, 2019 ... is just a placeholder, date it's not importent just time for this check 
+	UNIX_TIMESTAMP( CONCAT( '2019-05-05', ' ', SUBSTR( ?, 11, 19 ) ) ) 
+			
+					>= 
+
+	UNIX_TIMESTAMP( CONCAT( '2019-05-05', ' ', SUBSTR( ( SELECT the_end FROM containers WHERE cont_id = ? ), 11, 19  ) ) )
+
+
+
+)
+
+# Very important to set LIMIT cause otherwise it will try to run the query so many times how much rows exists in the result set
+LIMIT 0,1;
+";
+
+
+
 our $test3 = 'SELECT * FROM containers AS c WHERE c.cont_id IN (
         SELECT c.cont_id FROM reservations AS r WHERE
          c.capacity > 3 AND (
@@ -247,14 +332,43 @@ our $test3 = 'SELECT * FROM containers AS c WHERE c.cont_id IN (
 );
 
 ';
-#our $all_res = "SELECT * FROM " .$table1. ";";
-our $all_res = "SELECT t1.reserv_id, t1.cont_id, t2.capacity, t1.pers_quant, t1.reserv_at AS t1resat, t1.reserv_until AS t1resuntil FROM " .$table1. " AS t1 INNER JOIN " .$table2. " AS t2 ON t1.cont_id = t2.cont_id HAVING UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(t1resat) AND UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(t1resuntil) OR UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(t1resat) AND UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(t1resuntil);";
+
+our $all_res = "
+SELECT 
+	
+	t1.reserv_id, t1.cont_id, t2.capacity, t1.pers_quant, t1.reserv_at AS t1resat, t1.reserv_until AS t1resuntil 
+	
+FROM " 
+
+	.$table1. " AS t1 
+	
+INNER JOIN " 
+
+	.$table2. " AS t2 ON t1.cont_id = t2.cont_id 
+	
+HAVING 
+
+	UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(t1resat) 
+	
+AND 
+
+	UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(t1resuntil) 
+	
+OR 
+
+	UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(t1resat) 
+	
+AND 
+
+	UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(t1resat);";
+
+
 our $all_cont = "SELECT * FROM " .$table2. ";";
 
 #index
 our $sql_sess = "SELECT rand_date, sess_act FROM login WHERE sess_act = ?;";
 
-#controler
+#controller
 our $sql_sess_ofId = "SELECT rand_date, sess_act FROM login WHERE id = ?;";
 
 #login

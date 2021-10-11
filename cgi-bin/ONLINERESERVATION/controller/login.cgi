@@ -13,13 +13,6 @@ $pw = $cgi->param('pw');
 $password = $cgi->param('password');
 $id = $cgi->param('id');
 
-####ACCESSORS
-our $accIns_el = sub {
-                # make plausibility check with sprintf ...
-                my ( $ref, $sql ) = ( shift, shift );
-                $ins_post = $sql if $sql ne "";
-                $ins_post;
-};
 
 ####CONSTRUCTOR 
 sub new { 
